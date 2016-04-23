@@ -148,7 +148,12 @@ BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_SEPARATED_DT := true
 BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
 BOARD_RAMDISK_OFFSET := 0x02000000
-BOARD_ROOT_EXTRA_SYMLINKS := /data/tombstones:/tombstones
+BOARD_ROOT_EXTRA_SYMLINKS := \
+    /data/tombstones:/tombstones \
+    /mnt/vendor/persist:/persist \
+    /vendor/efs:/efs \
+    /vendor/firmware_mnt:/firmware \
+    /vendor/firmware-modem:/firmware-modem
 LZMA_RAMDISK_TARGETS := recovery
 TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
