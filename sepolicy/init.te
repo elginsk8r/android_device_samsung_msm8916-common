@@ -1,1 +1,2 @@
 allow init rild_cas_socket:sock_file w_file_perms;
+allow init modem_firmware_file:dir { mounton };
