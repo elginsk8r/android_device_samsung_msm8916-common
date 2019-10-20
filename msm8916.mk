@@ -93,6 +93,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Bluetooth
 PRODUCT_PACKAGES += \
+    libbase_shim \
     libbt-vendor
 
 # Bluetooth
