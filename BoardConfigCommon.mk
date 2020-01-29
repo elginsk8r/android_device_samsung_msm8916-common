@@ -22,6 +22,7 @@ TARGET_SPECIFIC_HEADER_PATH += $(PLATFORM_PATH)/include
 -include device/samsung/qcom-common/BoardConfigCommon.mk
 
 BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
 
 # Architecture/platform
 BOARD_VENDOR := samsung
