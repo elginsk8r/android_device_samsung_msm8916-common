@@ -517,10 +517,10 @@ on post-fs-data
     chmod 0660 /data/misc/radio/db_check_done
 
     # link  the telephony database
-    start link_ril_db
+    start vendor.link_ril_db
 
 # start camera server as daemon
-service qcamerasvr /system/vendor/bin/mm-qcamera-daemon
+service vendor.qcamerasvr /system/vendor/bin/mm-qcamera-daemon
     class late_start
     user camera
     group camera system inet input graphics
@@ -529,7 +529,7 @@ service qcamerasvr /system/vendor/bin/mm-qcamera-daemon
 on property:sys.boot_completed=1
     restart cameraserver
 
-service qseecomd /system/vendor/bin/qseecomd
+service vendor.qseecomd /system/vendor/bin/qseecomd
    class core
    user root
    group root
@@ -540,7 +540,7 @@ service perfd /system/vendor/bin/perfd
    user root
    disabled
 
-service thermal-engine /system/vendor/bin/thermal-engine
+service vendor.thermal-engine /system/vendor/bin/thermal-engine
    class main
    user root
    socket thermal-send-client stream 0666 system system
@@ -549,7 +549,7 @@ service thermal-engine /system/vendor/bin/thermal-engine
    group root
    writepid /dev/cpuset/system-background/tasks
 
-service qcomsysd /system/vendor/bin/qcom-system-daemon
+service vendor.qcomsysd /system/vendor/bin/qcom-system-daemon
     class main
     user root
     group root diag
@@ -561,23 +561,23 @@ on property:persist.vendor.qcomsysd.enabled=1
 on property:persist.vendor.qcomsysd.enabled=0
     stop qcomsysd
 
-service ssr_setup /system/vendor/bin/ssr_setup
+service vendor.ssr_setup /system/vendor/bin/ssr_setup
     oneshot
     disabled
 
-service ss_ramdump /system/vendor/bin/subsystem_ramdump
+service vendor.ss_ramdump /system/vendor/bin/subsystem_ramdump
     class main
     user system
     group system
     disabled
 
 on property:persist.sys.ssr.restart_level=*
-    start ssr_setup
+    start vendor.ssr_setup
 
 on property:persist.sys.ssr.enable_ramdumps=1
     write /sys/module/subsystem_restart/parameters/enable_ramdumps 1
     mkdir /data/ramdump 770 system system
-    start ss_ramdump
+    start vendor.ss_ramdump
 
 on property:persist.sys.ssr.enable_ramdumps=0
     write /sys/module/subsystem_restart/parameters/enable_ramdumps 0
@@ -606,14 +606,14 @@ on property:persist.debug.trace=1
     write /sys/bus/coresight/devices/coresight-etm3/enable 1
     write /sys/module/coresight_event/parameters/event_abort_enable 1
 
-service qcom-c_main-sh /system/vendor/bin/init.class_main.sh
+service vendor.qcom-c_main-sh /system/vendor/bin/init.class_main.sh
     class main
     user root
     oneshot
 
 on property:vold.decrypt=trigger_restart_framework
-    start qcom-c_main-sh
-    start wcnss-service
+    start vendor.qcom-c_main-sh
+    start vendor.wcnss-service
 
 # FM enable/disable triggers
 on property:hw.fm.init=1
@@ -622,12 +622,12 @@ on property:hw.fm.init=1
 on property:hw.fm.init=0
     write /sys/module/radio_iris_transport/parameters/fmsmd_set 0
 
-service irsc_util /system/vendor/bin/irsc_util "/vendor/etc/sec_config"
+service vendor.irsc_util /system/vendor/bin/irsc_util "/vendor/etc/sec_config"
     class main
     user root
     oneshot
 
-service rmt_storage /system/vendor/bin/rmt_storage
+service vendor.rmt_storage /system/vendor/bin/rmt_storage
     class core
     user root
     group system wakelock
@@ -647,13 +647,13 @@ service start_hci_filter /system/vendor/bin/wcnss_filter
     disabled
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/vendor/bin/qmuxd
+service vendor.qmuxd /system/vendor/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps nfc diag
     writepid /dev/cpuset/system-background/tasks
 
-service netmgrd /system/vendor/bin/netmgrd
+service vendor.netmgrd /system/vendor/bin/netmgrd
     class main
     user root
     group root wifi wakelock radio inet
@@ -667,19 +667,19 @@ service sensors /system/vendor/bin/sensors.qcom
 
 on property:ro.use_data_netmgrd=false
     # netmgr not supported on specific target
-    stop netmgrd
+    stop vendor.netmgrd
 
 # Adjust socket buffer to enlarge TCP receive window for high bandwidth
 # but only if ro.data.large_tcp_window_size property is set.
 on property:ro.data.large_tcp_window_size=true
     write /proc/sys/net/ipv4/tcp_adv_win_scale  2
 
-service link_ril_db /system/vendor/bin/init.link_ril_db.sh
+service vendor.link_ril_db /system/vendor/bin/init.link_ril_db.sh
     class main
     user root
     oneshot
 
-service wlandutservice /system/vendor/bin/wlandutservice
+service vendor.wlandutservice /system/vendor/bin/wlandutservice
     class main
     user system
     group wifi net_raw net_admin system inet
@@ -693,19 +693,19 @@ service vendor.fm /system/vendor/bin/init.qcom.fm.sh
     disabled
     oneshot
 
-service qcom-sh /system/vendor/bin/init.qcom.sh
+service vendor.qcom-sh /system/vendor/bin/init.qcom.sh
     class late_start
     user root
     oneshot
 
-service qcom-post-boot /system/vendor/bin/init.qcom.post_boot.sh
+service vendor.qcom-post-boot /system/vendor/bin/init.qcom.post_boot.sh
     class late_start
     user root
     disabled
     oneshot
 
 on property:sys.boot_completed=1
-    start qcom-post-boot
+    start vendor.qcom-post-boot
     setprop sys.io.scheduler "bfq"
 
 # Enable Touch Devices
@@ -717,14 +717,14 @@ on property:sys.boot_completed=1
     write /sys/class/touch_screen/control auto
 
 # RIL for multi rild
-service ril-daemon2 /system/vendor/bin/hw/rild -l /system/vendor/lib/libsec-ril-dsds.so -c 2
+service vendor.ril-daemon2 /system/vendor/bin/hw/rild -l /system/vendor/lib/libsec-ril-dsds.so -c 2
     class main
     user radio
     disabled
     group radio cache inet misc audio log readproc wakelock
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
 
-service usb_uicc_enable /system/vendor/bin/init.qcom.uicc.sh
+service vendor.usb_uicc_enable /system/vendor/bin/init.qcom.uicc.sh
     class late_start
     user root
     disabled
@@ -737,18 +737,18 @@ service usb_uicc_daemon /system/vendor/bin/usb_uicc_client
     oneshot
 
 on property:sys.usb_uicc.enabled=1
-    start usb_uicc_enable
+    start vendor.usb_uicc_enable
 
 on property:sys.usb_uicc.enabled=0
-    start usb_uicc_enable
+    start vendor.usb_uicc_enable
 
-service ssr_diag /system/vendor/bin/ssr_diag
+service vendor.ssr_diag /system/vendor/bin/ssr_diag
     class late_start
     user system
     group system
     disabled
 
-service wcnss-service /system/vendor/bin/wcnss_service
+service vendor.wcnss-service /system/vendor/bin/wcnss_service
     class late_start
     user system
     group system wifi radio
