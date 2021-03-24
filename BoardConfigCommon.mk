@@ -25,7 +25,6 @@ BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
 
 # Architecture/platform
 BOARD_VENDOR := samsung
-FORCE_32_BIT := true
 TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_BOARD_PLATFORM := msm8916
@@ -60,21 +59,12 @@ TARGET_USES_64_BIT_BINDER := true
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
-QCOM_BT_USE_BTNV := true
-BLUETOOTH_HCI_USE_MCT := true
-
-# Bootanimation
-TARGET_BOOTANIMATION_HALF_RES := true
 
 # Bootloader
 BOARD_PROVIDES_BOOTLOADER_MESSAGE := false
 TARGET_BOOTLOADER_BOARD_NAME := MSM8916
 
 # Camera
-BOARD_GLOBAL_CFLAGS += -DMETADATA_CAMERA_SOURCE
-TARGET_HAS_LEGACY_CAMERA_HAL1 ?= false
-TARGET_PROVIDES_CAMERA_HAL := true
-TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USES_QTI_CAMERA_DEVICE := true
 
 # Charger
@@ -95,19 +85,12 @@ NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 TARGET_USE_COMPAT_GRALLOC_PERFORM := true
 TARGET_USES_C2D_COMPOSITION := true
 TARGET_DISABLE_POSTRENDER_CLEANUP := true
+TARGET_USES_NEW_ION_API := true
 
 # Encryption
 TARGET_LEGACY_HW_DISK_ENCRYPTION := true
 TARGET_HW_KEYMASTER_V03 := true
 TARGET_KEYMASTER_WAIT_FOR_QSEE := true
-
-ifeq ($(RECOVERY_VARIANT),twrp)
-    TARGET_HW_DISK_ENCRYPTION := false
-    TARGET_SWV8_DISK_ENCRYPTION := false
-else
-    TARGET_HW_DISK_ENCRYPTION := true
-    TARGET_SWV8_DISK_ENCRYPTION := true
-endif
 
 # Filesystems
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
@@ -132,16 +115,8 @@ DEVICE_MANIFEST_FILE += $(PLATFORM_PATH)/manifest_telephony.xml
 endif
 
 # Kernel
-BOARD_KERNEL_CMDLINE += \
-    console=null \
-    androidboot.hardware=qcom \
-    user_debug=23 \
-    msm_rtb.filter=0x3F \
-    ehci-hcd.park=3 \
-    androidboot.bootdevice=7824900.sdhci \
-    androidboot.selinux=permissive \
-    loop.max_part=7
-
+BOARD_KERNEL_CMDLINE += androidboot.hardware=qcom user_debug=23 msm_rtb.filter=0x3F ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci loop.max_part=7
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_CUSTOM_BOOTIMG := true
 BOARD_CUSTOM_BOOTIMG_MK := $(PLATFORM_PATH)/mkbootimg.mk
 BOARD_DTBTOOL_ARGS := -2
@@ -165,14 +140,10 @@ TARGET_PROVIDES_LIBLIGHT := true
 MALLOC_SVELTE := true
 
 # Media
-TARGET_QCOM_MEDIA_VARIANT := caf
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 
 # Network Routing
 TARGET_NEEDS_NETD_DIRECT_CONNECT_RULE := true
-
-# NFC
-BOARD_NFC_HAL_SUFFIX := msm8916
 
 # Partition sizes
 BOARD_BOOTIMAGE_PARTITION_SIZE := 13631488
@@ -195,15 +166,6 @@ TARGET_USES_INTERACTION_BOOST := true
 # Radio
 TARGET_USES_OLD_MNC_FORMAT := true
 
-# Protobuf
-PROTOBUF_SUPPORTED := true
-
-# Qualcomm support
-TARGET_USES_QCOM_BSP := true
-HAVE_SYNAPTICS_I2C_RMI4_FW_UPGRADE := true
-USE_DEVICE_SPECIFIC_QCOM_PROPRIETARY := true
-TARGET_USES_NEW_ION_API := true
-
 # Recovery
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../$(PLATFORM_PATH)/recovery/recovery_keys.c
 BOARD_HAS_NO_MISC_PARTITION := true
@@ -219,26 +181,6 @@ TARGET_RECOVERY_DENSITY := hdpi
 TARGET_RECOVERY_FSTAB := $(PLATFORM_PATH)/recovery/recovery.fstab
 TARGET_RECOVERY_PIXEL_FORMAT := "RGB_565"
 TARGET_RECOVERY_QCOM_RTC_FIX := true
-
-# Recovery - TWRP
-TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-TW_HAS_DOWNLOAD_MODE := true
-TW_HAS_MTP := true
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_NTFS_3G := true
-TW_INPUT_BLACKLIST := "accelerometer\x0ahbtp_vm"
-TW_INTERNAL_STORAGE_PATH := "/data/media/0"
-TW_MAX_BRIGHTNESS := 255
-TW_MTP_DEVICE := /dev/mtp_usb
-TW_NEW_ION_HEAP := true
-TW_NO_REBOOT_BOOTLOADER := true
-TW_NO_USB_STORAGE := true
-TW_TARGET_USES_QCOM_BSP := false
-TW_THEME := portrait_hdpi
-
-ifeq ($(RECOVERY_VARIANT),twrp)
-    BOARD_GLOBAL_CFLAGS += -DTW_USE_MINUI_CUSTOM_FONTS
-endif
 
 # SELinux
 include device/qcom/sepolicy-legacy/sepolicy.mk
@@ -256,19 +198,8 @@ TARGET_LD_SHIM_LIBS := \
     /vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
     /vendor/lib/hw/android.hardware.bluetooth@1.0-impl-qti.so|libbase_shim.so
 
-# Snapdragon LLVM
-TARGET_USE_SDCLANG := true
-
-# Time services
-BOARD_USES_QC_TIME_SERVICES := true
-
 # Vendor
 PRODUCT_VENDOR_MOVE_ENABLED := true
-
-# Vold
-BOARD_VOLD_DISC_HAS_MULTIPLE_MAJORS := true
-BOARD_VOLD_MAX_PARTITIONS := 67
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun%d/file
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true

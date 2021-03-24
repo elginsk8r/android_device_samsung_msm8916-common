@@ -49,13 +49,8 @@ PRODUCT_PACKAGES += \
     libqcompostprocbundle \
     libqcomvisualizer \
     libqcomvoiceprocessing \
-    tinyplay \
-    tinycap \
-    tinymix \
-    tinypcminfo \
     libtinycompress
 
-# Audio configuration file
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
     $(LOCAL_PATH)/configs/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
@@ -66,34 +61,23 @@ PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/usb_audio_policy_configuration.xml
 
-# Mixer paths
 ifneq ($(USE_CUSTOM_MIXER_PATHS), true)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio/mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths.xml
 endif
 
-# Audio encoders
 PRODUCT_PROPERTY_OVERRIDES += \
-    qcom.hw.aac.encoder=false
-
-# Audio - Fluence
-PRODUCT_PROPERTY_OVERRIDES += \
+    qcom.hw.aac.encoder=false \
     persist.vendor.audio.fluence.speaker=true \
     persist.vendor.audio.fluence.voicecall=true \
     persist.vendor.audio.fluence.voicerec=false \
     ro.vendor.audio.sdk.fluencetype=none \
-    ro.vendor.audio.sdk.ssr=false
-
-# Audio offload
-PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vendor.audio.sdk.ssr=false \
     vendor.audio.offload.buffer.size.kb=32 \
     vendor.audio.offload.gapless.enabled=true \
     audio.offload.min.duration.secs=30 \
     vendor.audio.offload.track.enable=true \
-    vendor.audio.tunnel.encode=false
-
-# Audio voice recording
-PRODUCT_PROPERTY_OVERRIDES += \
+    vendor.audio.tunnel.encode=false \
     vendor.voice.path.for.pcm.voip=true \
     vendor.voice.playback.conc.disabled=true \
     vendor.voice.record.conc.disabled=true \
@@ -119,6 +103,13 @@ PRODUCT_PACKAGES += \
     libboringssl-compat
 
 # Camera
+PRODUCT_PACKAGES += \
+    android.hardware.camera.provider@2.4-impl \
+    android.hardware.camera.provider@2.4-service \
+    libcamera_shim \
+    libmm-qcamera \
+    camera.msm8916
+
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     camera2.portability.force_api=1
 
@@ -127,34 +118,24 @@ PRODUCT_PROPERTY_OVERRIDES += \
     camera2.portability.force_api=1 \
     debug.camcorder.disablemeta=true
 
-# Camera
-PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service \
-    libcamera_shim \
-    libmm-qcamera \
-    camera.msm8916
-
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/camera/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml
 
 # Connectivity Engine
+PRODUCT_PACKAGES += \
+    libcnefeatureconfig
+
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.cne.dpm=0 \
     persist.cne.feature=0 \
     persist.dpm.feature=0
 
-# Connectivity Engine support
-PRODUCT_PACKAGES += \
-    libcnefeatureconfig
-
-# Data configuration files
+# Data modules
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/data/dsi_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/data/dsi_config.xml \
     $(LOCAL_PATH)/configs/data/netmgr_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/data/netmgr_config.xml \
     $(LOCAL_PATH)/configs/data/qmi_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/data/qmi_config.xml
 
-# Data modules
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.data.netmgrd.qos.enable=false \
     ro.use_data_netmgrd=false
@@ -178,6 +159,19 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     AdvancedDisplay \
     SamsungDoze
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    debug.composition.type=c2d \
+    debug.egl.hw=1 \
+    debug.sf.hw=1 \
+    debug.hwui.use_buffer_age=false \
+    debug.mdpcomp.logs=0 \
+    dev.pm.dyn_samplingrate=1 \
+    persist.hwc.enable_vds=1 \
+    persist.hwc.mdpcomp.enable=true
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    ro.surface_flinger.max_frame_buffer_acquired_buffers=3
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -221,16 +215,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-service.software
 
-# Graphics
-PRODUCT_PROPERTY_OVERRIDES += \
-    debug.composition.type=c2d \
-    debug.egl.hw=1 \
-    debug.sf.hw=1 \
-    debug.hwui.use_buffer_age=false
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.surface_flinger.max_frame_buffer_acquired_buffers=3
-
 # GPS Configs
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps/flp.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/flp.conf \
@@ -246,17 +230,6 @@ PRODUCT_PACKAGES += \
     com.android.location.provider.xml \
     gps.msm8916 \
     libshim_gps
-
-# GPS Properties
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.gps.qc_nlp_in_use=1 \
-    persist.loc.nlp_name=com.qualcomm.location \
-    ro.gps.agps_provider=1 \
-    ro.pip.gated=0
-
-# Headers
-PRODUCT_VENDOR_KERNEL_HEADERS := \
-    hardware/qcom/msm8916/kernel-headers
 
 # Healthd
 PRODUCT_PACKAGES += \
@@ -282,7 +255,26 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.msm8916
 
-# Media configurations
+# Media
+PRODUCT_PACKAGES += \
+    libextmedia_jni \
+    libdashplayer \
+    libdivxdrmdecrypt \
+    libdrmclearkeyplugin \
+    libstagefrighthw \
+    libmm-omxcore \
+    libOmxAacEnc \
+    libOmxAmrEnc \
+    libOmxCore \
+    libOmxEvrcEnc \
+    libOmxQcelp13Enc \
+    libOmxSwVencMpeg4 \
+    libOmxVdec \
+    libOmxVdecHevc \
+    libOmxVenc \
+    libOmxVidEnc \
+    libOmxVdpp
+
 ifeq ($(filter j7ltespr j7ltechn,$(TARGET_DEVICE)),)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml
@@ -296,29 +288,6 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video_le.xml
-
-# Media
-PRODUCT_PACKAGES += \
-    libextmedia_jni \
-    libdashplayer \
-    libdivxdrmdecrypt \
-    libdrmclearkeyplugin \
-    libstagefrighthw
-
-# Media - OpenMAX
-PRODUCT_PACKAGES += \
-    libmm-omxcore \
-    libOmxAacEnc \
-    libOmxAmrEnc \
-    libOmxCore \
-    libOmxEvrcEnc \
-    libOmxQcelp13Enc \
-    libOmxSwVencMpeg4 \
-    libOmxVdec \
-    libOmxVdecHevc \
-    libOmxVenc \
-    libOmxVidEnc \
-    libOmxVdpp
 
 # Media
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -335,33 +304,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     mm.enable.smoothstreaming=true \
     mmp.enable.3g2=true
 
-ifeq ($(TARGET_HAS_LEGACY_CAMERA_HAL1),true)
-PRODUCT_PROPERTY_OVERRIDES += \
-    media.stagefright.legacyencoder=true \
-    media.stagefright.less-secure=true
-endif
-
 # Memory optimizations
 PRODUCT_PROPERTY_OVERRIDES += \
+    ro.config.zram.size=128 \
     ro.vendor.qti.sys.fw.bservice_enable=true
-
-# Misc
-PRODUCT_PACKAGES += \
-    curl \
-    libbson \
-    libcurl \
-    libkeyutils \
-    tcpdump
-
-# Misc.
-PRODUCT_PROPERTY_OVERRIDES += \
-    debug.mdpcomp.logs=0 \
-    dev.pm.dyn_samplingrate=1 \
-    persist.hwc.enable_vds=1 \
-    persist.hwc.mdpcomp.enable=true \
-    persist.sys.storage_preload=1 \
-    ro.data.large_tcp_window_size=true \
-    sys.disable_ext_animation=1
 
 # Native libraries
 PRODUCT_COPY_FILES += \
@@ -465,13 +411,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     rild.libpath=/vendor/lib/libsec-ril.so \
     ro.multisim.set_audio_params=true
 
-# SAMP SPCM
-PRODUCT_PROPERTY_OVERRIDES += \
-    sys.config.samp_spcm_enable=true \
-    sys.config.spcm_db_enable=true \
-    sys.config.spcm_db_launcher=true \
-    sys.config.spcm_preload_enable=true
-
 # Security configuration file
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:$(TARGET_COPY_OUT_VENDOR)/etc/sec_config
@@ -505,10 +444,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-impl
 
-# Video encoding
-PRODUCT_PROPERTY_OVERRIDES += \
-    vidc.enc.narrow.searchrange=1
-
 # Wifi configuration files
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wifi/cred.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/cred.conf \
@@ -517,11 +452,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wifi/WCNSS_cfg.dat:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_cfg.dat \
     $(LOCAL_PATH)/configs/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/configs/wifi/WCNSS_qcom_wlan_nv.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
-
-# WiDi
-PRODUCT_PACKAGES += \
-    com.android.media.remotedisplay \
-    com.android.media.remotedisplay.xml
 
 # WiDi
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -540,10 +470,6 @@ PRODUCT_PACKAGES += \
     wificond \
     wpa_supplicant \
     wpa_supplicant.conf
-
-# ZRAM - Size in MB
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.config.zram.size=128
 
 # Include proprietary blobs
 $(call inherit-product-if-exists, vendor/samsung/msm8916-common/msm8916-common-vendor.mk)
