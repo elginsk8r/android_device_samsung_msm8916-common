@@ -429,17 +429,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.qcom \
-    init.carrier.rc \
-    init.class_main.sh \
-    init.link_ril_db.sh \
-    init.qcom.fm.sh \
-    init.qcom.post_boot.sh \
     init.qcom.rc \
-    init.qcom.sh \
-    init.qcom.uicc.sh \
+    init.qcom.bt.sh \
+    init.qcom.mem.sh \
+    init.qcom.power.rc \
     init.qcom.usb.rc \
-    init.qcom.usb.sh \
     init.recovery.qcom.rc \
+    init.samsung.qcom.rc \
     twrp.fstab \
     ueventd.qcom.rc
 
@@ -503,6 +499,18 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # USB HAL
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service.basic
+
+# USB ID
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    ro.usb.id.midi=686C \
+    ro.usb.id.midi_adb=686C \
+    ro.usb.id.mtp=6860 \
+    ro.usb.id.mtp_adb=6860 \
+    ro.usb.id.ptp=6865 \
+    ro.usb.id.ptp_adb=6866 \
+    ro.usb.id.ums=685B \
+    ro.usb.id.ums_adb=685E \
+    ro.usb.vid=04E8
 
 # Vendor security patch level
 PRODUCT_PROPERTY_OVERRIDES += \

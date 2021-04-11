@@ -1,0 +1,259 @@
+# Copyright (c) 2009-2012, 2014-2015, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of The Linux Foundation nor
+#       the names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior written
+#       permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NON-INFRINGEMENT ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+on fs
+    chown system radio /efs
+    chmod 0771 /efs
+    restorecon -R /efs
+
+on post-fs-data
+    # sec_efs_file
+    mkdir /efs/sec_efs 0775 radio system
+
+    # for WIFI MAC address
+    mkdir /efs/wifi 0775 radio system
+    chown system wifi /efs/wifi/.mac.info
+    chmod 0660 /efs/wifi/.mac.info
+    chmod 0660 /efs/wifi/.mac.cob
+
+    # for WIFI Version
+    write /data/.wifiver.info 0
+    chown system root /data/.wifiver.info
+    chmod 0666 /data/.wifiver.info
+
+    # For SEC NFC
+    chmod 0770 /data/nfc
+    chown nfc nfc /data/nfc
+    chmod 0770 /data/nfc/param
+    chown nfc nfc /data/nfc/param
+
+    # link  the telephony database
+    start vendor.link_ril_db
+
+on early-boot
+    setprop persist.service.bdroid.bdaddr "/efs/bluetooth/bt_addr"
+
+on boot
+    # Bluetooth
+    chmod 0660 /dev/ttyHS2
+    chown bluetooth bluetooth /dev/ttyHS2
+
+    # SEC NFC
+    chmod 0660 /dev/sec-nfc
+    chown nfc nfc /dev/sec-nfc
+
+    # PN547 NFC
+    chmod 0660 /dev/pn547
+    chown nfc nfc /dev/pn547
+
+    # NXP Amplifier
+    chmod 0666 /dev/i2c-1
+    chown system system /dev/i2c-1
+
+    # Touch Disabler permissions
+    chown system system /sys/class/touch_key
+    chown system system /sys/class/touch_key/control
+    chown system system /sys/class/touch_key/enabled
+    chown system system /sys/class/touch_key/status
+    chown system system /sys/class/touch_screen
+    chown system system /sys/class/touch_screen/control
+    chown system system /sys/class/touch_screen/enabled
+    chown system system /sys/class/touch_screen/status
+
+    # BT MAC address
+    mkdir /efs/bluetooth 0775 radio system
+    # if already exist
+    chown radio system /efs/bluetooth
+    chmod 0775 /efs/bluetooth
+
+    # SSRM
+    chmod 0664 /sys/devices/platform/sec-thermistor/temperature
+    chmod 0664 /sys/class/power_supply/battery/siop_level
+    chmod 0664 /sys/class/power_supply/battery/test_charge_current
+    chown radio system /sys/devices/platform/sec-thermistor/temperature
+    chown radio system /sys/class/power_supply/battery/siop_level
+    chown radio system /sys/class/power_supply/battery/test_charge_current
+
+    # Vibrator
+    chmod 0644 /sys/class/timed_output/vibrator/pwm_value
+    chown system system /sys/class/timed_output/vibrator/pwm_value
+
+    # Auto Brightness
+    chown system system  /sys/class/backlight/panel/auto_brightness
+    chmod 0660 /sys/class/backlight/panel/auto_brightness
+
+    # LCD mdnie and panel work
+    chown system system  /sys/class/mdnie/mdnie/lcdtype
+    chown system system  /sys/class/mdnie/mdnie/lcd_power
+    chown system media_rw /sys/class/mdnie/mdnie/scenario
+    chmod 0660 /sys/class/mdnie/mdnie/scenario
+    chown system system /sys/class/mdnie/mdnie/tuning
+    chown system media_rw /sys/class/mdnie/mdnie/outdoor
+    chown system system  /sys/class/mdnie/mdnie/mdnie_temp
+    chown system media_rw /sys/class/mdnie/mdnie/mode
+    chown system system /sys/class/mdnie/mdnie/negative
+    chown system media_rw /sys/class/mdnie/mdnie/playspeed
+    chown system media_rw /sys/class/mdnie/mdnie/accessibility
+    chown system system  /sys/class/mdnie/mdnie/cabc
+    chown system system  /sys/class/mdnie/mdnie/bypass
+    chown system media_rw /sys/class/mdnie/mdnie/sensorRGB
+    chmod 0660 /sys/class/mdnie/mdnie/sensorRGB
+    chown system system /sys/class/lcd/panel/panel/auto_brightness
+    chown system system /sys/class/lcd/panel/window_type
+    chown radio system /sys/class/lcd/panel/power_reduce
+    chown radio system /sys/class/lcd/panel/siop_enable
+    chown radio system /sys/class/lcd/panel/temperature
+    chown radio system /sys/class/lcd/panel/tuning
+    chown radio system /sys/class/lcd/panel/lux
+
+    # CSC_Conversion
+    chown system media_rw /sys/class/graphics/fb0/csc_cfg
+    chmod 0660 /sys/class/graphics/fb0/csc_cfg
+
+    # Input Device
+    chown system radio /sys/class/sec/tsp/cmd
+    chmod 0660 /sys/class/sec/tsp/input/enabled
+    chown system system /sys/class/sec/tsp/input/enabled
+    chmod 0660 /sys/class/sec/sec_touchkey/input/enabled
+    chown system system /sys/class/sec/sec_touchkey/input/enabled
+    chmod 0660 /sys/class/sec/sec_touchkey/brightness
+    chown system system /sys/class/sec/sec_touchkey/brightness
+
+    # GPIO keys
+    chown system radio /sys/class/sec/sec_key/wakeup_keys
+    write /sys/class/sec/sec_key/wakeup_keys 116,172
+
+    # Camera
+    chown root system /sys/class/camera/rear/rear_camantibanding
+    chown system system /sys/class/camera/rear/rear_camfw
+    chown system system /sys/class/camera/rear/rear_checkfw_user
+    chown system system /sys/class/camera/rear/rear_checkfw_factory
+    chown system system /sys/class/camera/rear/rear_camfw_full
+    chown system system /sys/class/camera/rear/rear_camfw_load
+    chown system system /sys/class/camera/rear/rear_camtype
+    chown system radio /sys/class/camera/rear/rear_corever
+    chown system radio /sys/class/camera/rear/rear_companionfw_full
+    chown system radio /sys/class/camera/rear/rear_calcheck
+    chown system radio /sys/class/camera/rear/rear_fwcheck
+    chown system system /sys/class/camera/rear/isp_core
+    chown system radio /sys/class/camera/flash/rear_flash
+    chown system radio /sys/class/camera/flash/front_flash
+    chown system system /sys/class/camera/front/front_camfw
+    chown system system /sys/class/camera/front/front_camtype
+    chown system system /sys/class/camera/front/front_camfw_full
+    chown system system /sys/class/camera/front/front_camfw_load
+
+    #OTG Test
+    chown system radio /sys/class/host_notify/usb_otg/booster
+    chmod 0660 /sys/class/host_notify/usb_otg/booster
+    chown system radio /sys/class/usb_notify/usb_control/disable
+    chmod 0660 /sys/class/usb_notify/usb_control/disable
+
+    # Accelerometer_sensor
+    chown system radio /sys/class/sensors/accelerometer_sensor/raw_data
+    chown system radio /sys/class/sensors/accelerometer_sensor/calibration
+    chown system radio /sys/class/sensors/accelerometer_sensor/reactive_alert
+    chown system radio /sys/class/sensors/accelerometer_sensor/vendor
+    chown system radio /sys/class/sensors/accelerometer_sensor/name
+    chown system radio /sys/class/sensors/accelerometer_sensor/selftest
+    chown system radio /sys/class/sensors/accelerometer_sensor/lowpassfilter
+
+    # Proximity_sensor
+    chown system radio /sys/class/sensors/proximity_sensor/state
+    chown system radio /sys/class/sensors/proximity_sensor/raw_data
+    chown system radio /sys/class/sensors/proximity_sensor/prox_avg
+    chown system radio /sys/class/sensors/proximity_sensor/prox_cal
+    chown system radio /sys/class/sensors/proximity_sensor/vendor
+    chown system radio /sys/class/sensors/proximity_sensor/name
+    chown system radio /sys/class/sensors/proximity_sensor/thresh_high
+    chown system radio /sys/class/sensors/proximity_sensor/thresh_low
+    chown system radio /sys/class/sensors/proximity_sensor/prox_offset_pass
+    chown system radio /sys/class/sensors/proximity_sensor/prox_trim
+
+    # Light_sensor
+    chown system radio /sys/class/sensors/light_sensor/lux
+    chown system radio /sys/class/sensors/light_sensor/raw_data
+    chown system radio /sys/class/sensors/light_sensor/vendor
+    chown system radio /sys/class/sensors/light_sensor/name
+
+    # Gyro_sensor
+    chown system radio /sys/class/sensors/gyro_sensor/power_on
+    chown system radio /sys/class/sensors/gyro_sensor/power_off
+    chown system radio /sys/class/sensors/gyro_sensor/temperature
+    chown system radio /sys/class/sensors/gyro_sensor/selftest
+    chown system radio /sys/class/sensors/gyro_sensor/vendor
+    chown system radio /sys/class/sensors/gyro_sensor/name
+
+    # Magnetic_sensor
+    chown system radio /sys/class/sensors/magnetic_sensor/selftest
+    chown system radio /sys/class/sensors/magnetic_sensor/raw_data
+    chown system radio /sys/class/sensors/magnetic_sensor/adc
+    chown system radio /sys/class/sensors/magnetic_sensor/vendor
+    chown system radio /sys/class/sensors/magnetic_sensor/name
+    chown system radio /sys/class/sensors/magnetic_sensor/status
+
+    # MetaEvent
+    chown system radio /sys/class/sensors/sensor_dev/flush
+
+    # Charging
+    mkdir /efs/Battery 0775 radio system
+    chown system radio /sys/class/power_supply/battery/batt_reset_soc
+    chown system radio /sys/class/power_supply/battery/update
+    chown system radio /sys/class/power_supply/battery/factory_mode
+    chown system radio /sys/class/power_supply/battery/batt_slate_mode
+    chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/call
+    chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/video
+    chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/music
+    chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/browser
+    chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/hotspot
+    chown sdcard_rw sdcard_rw /sys/class/power_supply/battery/camera
+    chown system radio /sys/class/power_supply/battery/talk_wcdma
+    chown system radio /sys/class/power_supply/battery/talk_gsm
+    chown system radio /sys/class/power_supply/battery/call
+    chown system radio /sys/class/power_supply/battery/data_call
+    chown system radio /sys/class/power_supply/battery/gps
+    chown system radio /sys/class/power_supply/battery/wifi
+    chown system radio /sys/class/power_supply/battery/lte
+    chown system radio /sys/class/power_supply/battery/wc_enable
+    chown system radio /sys/class/power_supply/battery/lcd
+    chown system radio /sys/class/power_supply/ps/status
+    chmod 0664 /sys/class/power_supply/ps/status
+    chown system radio /sys/class/power_supply/battery/batt_temp_table
+
+service vendor.link_ril_db /system/vendor/bin/init.link_ril_db.sh
+    class main
+    user root
+    oneshot
+
+# Enable Touch Devices
+on property:sys.boot_completed=1
+    write /sys/class/touch_key/control manual
+    write /sys/class/touch_key/enabled true
+    write /sys/class/touch_key/control auto
+    write /sys/class/touch_screen/control manual
+    write /sys/class/touch_screen/enabled true
+    write /sys/class/touch_screen/control auto
